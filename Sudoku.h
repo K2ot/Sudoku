@@ -9,15 +9,14 @@
 
 class Sudo
 {
-	short const D = 9;		//wielkoœæ matrycy 9 x 9
-	int inVal_ = 1;			//wartoœæ wpisywana
-	int Row_ = 0;			//wiersz
-	int Column_ = 0;		//kolumna
+	short const D{ 9 };		//wielkosc matrycy 9 x 9
+	int inVal_{ 1 };		//wartosc wpisywana
+	int Row_{ 0 };			//wiersz
+	int Column_{ 0 };		//kolumna
 
 	HANDLE kolor = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	//sprawdza warunki wej
-	bool checkInVal_(std::vector< std::vector<int>>& Matrix)
+	bool checkInVal_(const std::vector< std::vector<int>>& Matrix) const
 	{
 		if (!checkRow_(Matrix) &&
 			!checkColumn_(Matrix) &&
@@ -31,9 +30,9 @@ class Sudo
 		}
 	}
 
-	bool checkColumn_(std::vector< std::vector<int>>& Matrix)
+	bool checkColumn_(const std::vector< std::vector<int>>& Matrix) const
 	{
-		for (int Row_ = 0; Row_ < D; Row_++)
+		for (int Row_{ 0 }; Row_ < D; Row_++)
 		{
 			if (Matrix[Row_][Column_] == inVal_)
 			{
@@ -43,9 +42,9 @@ class Sudo
 		return false;
 	}
 
-	bool checkRow_(std::vector< std::vector<int>>& Matrix)
+	bool checkRow_(const std::vector< std::vector<int>>& Matrix) const
 	{
-		for (int Column_ = 0; Column_ < D; Column_++)
+		for (int Column_{ 0 }; Column_ < D; Column_++)
 		{
 			if (Matrix[Row_][Column_] == inVal_)
 			{
@@ -55,15 +54,15 @@ class Sudo
 		return false;
 	}
 
-	bool checkBox_(std::vector< std::vector<int>>& Matrix)
+	bool checkBox_(const std::vector< std::vector<int>>& Matrix) const
 	{
-		int rBox, cBox;
+		int rBox{}, cBox{};
 		rBox = (Row_ - Row_ % 3);
 		cBox = (Column_ - Column_ % 3);
 
-		for (int row_box = 0; row_box < 3; row_box++)
+		for (int row_box{ 0 }; row_box < 3; row_box++)
 		{
-			for (int col_box = 0; col_box < 3; col_box++)
+			for (int col_box{ 0 }; col_box < 3; col_box++)
 			{
 				if (Matrix[rBox + row_box][cBox + col_box] == inVal_)
 				{
@@ -113,11 +112,11 @@ class Sudo
 		inVal_++;
 	}
 
-	void sudoStart(std::vector< std::vector<int>>& Matrix0, std::vector< std::vector<int>>& Matrix)
+	void sudoStart(std::vector< std::vector<int>>& Matrix0, const std::vector< std::vector<int>>& Matrix) const
 	{
-		for (int i = 0; i < D; i++)
+		for (int i{ 0 }; i < D; i++)
 		{
-			for (int j = 0; j < D; j++)
+			for (int j{ 0 }; j < D; j++)
 			{
 				Matrix0[i][j] = Matrix[i][j];
 			}
@@ -146,7 +145,7 @@ class Sudo
 					inVal_ = 1;
 				}
 				else
-				{	//nie pasuje?? zwiêksz o 1
+				{	//nie pasuje?? zwieksz o 1
 					inVal_++;
 				}
 			}
@@ -162,9 +161,9 @@ class Sudo
 	}
 
 	void inRowColVal(std::vector< std::vector<int>>& Matrix)
-	{	
-		//zabezpieczyæ przed wartoœciami ujemnymi 
-		auto inRow = 0, inCol = 0, inVal = 0;
+	{
+		//zabezpieczyæ przed wartosciami ujemnymi 
+		size_t inRow{ 0 }, inCol{ 0 }, inVal{ 0 };
 
 		std::cout << "Podaj wiersz: ";
 		std::cin >> inRow;
@@ -185,12 +184,12 @@ class Sudo
 			}
 			else
 			{
-				std::cout << inVal << " ju¿ jest\n";
+				std::cout << inVal << " juz jest\n";
 			}
 		}
 		else
 		{
-			std::cout << "z³a wartoœci, podaj liczby w przedziale od 1 do 9\n";
+			std::cout << "zla wartoœci, podaj liczby w przedziale od 1 do 9\n";
 			inRowColVal(Matrix);
 		}
 
@@ -201,7 +200,7 @@ class Sudo
 		SetConsoleTextAttribute(kolor, 14);
 
 		std::cout << "\n    1 2 3   4 5 6   7 8 9 \n";
-		for (int i = 0; i < D; i++)
+		for (int i{ 0 }; i < D; i++)
 		{
 			if (i % 3 == 0)
 			{
@@ -209,7 +208,7 @@ class Sudo
 				std::cout << "   -----------------------\n";
 			}
 
-			for (int j = 0; j < D; j++)
+			for (int j{ 0 }; j < D; j++)
 			{
 				if (j == 0)
 				{
@@ -260,14 +259,14 @@ class Sudo
 		else
 		{
 			plik.seekg(0, plik.end);
-			const auto koniec = plik.tellg();
-
-			if (84 * karetka > koniec)
+			const auto koniec{ plik.tellg() };
+			constexpr size_t sudokuLenth{ 84 };  
+			if (sudokuLenth * karetka > koniec)
 			{
-				karetka = koniec / 84;
+				karetka = koniec / sudokuLenth;
 
 			}
-			plik.seekg(84 * karetka);
+			plik.seekg(sudokuLenth * karetka);
 
 			while (!getline(plik, slowo, ';'))
 			{
@@ -278,26 +277,26 @@ class Sudo
 		}
 	}
 
-	void copyWord(std::string slowo)
+	void copyWord(std::string slowo) const
 	{
-		int k = 0;
-		for (int i = 0; i < D; i++)
+		constexpr int ASCII_Zero{ 48 };
+		int k{ 0 };
+		for (int i{ 0 }; i < D; i++)
 		{
-			for (int j = 0; j < D; j++)
+			for (int j{ 0 }; j < D; j++)
 			{
-				Sudo_Ref[i][j] = slowo[k];
-				Sudo_Ref[i][j] -= 48;
+				Sudo_Ref[i][j] = static_cast<int>(slowo[k]) - ASCII_Zero;
 				k++;
 			}
 		}
 	}
 
-	bool endSudo(std::vector< std::vector<int>>& Matrix)
+	bool endSudo(std::vector< std::vector<int>>& Matrix) const
 	{
-		int k = 0;
-		for (int i = 0; i < D; i++)
+		int k{ 0 };
+		for (int i{ 0 }; i < D; i++)
 		{
-			for (int j = 0; j < D; j++)
+			for (int j{ 0 }; j < D; j++)
 			{
 				return k *= Matrix[i][j];
 			}
@@ -307,7 +306,6 @@ class Sudo
 public:
 	void solutionSudoku()
 	{
-
 		SetConsoleTextAttribute(kolor, 14);
 
 		std::cout << "Czy chcesz rozwi¹zaæ samemu?? ";
@@ -319,22 +317,25 @@ public:
 		std::cin >> nrSudoku;
 		copyWord(fromFile(nrSudoku));
 		sudoStart(Sudo_00, Sudo_Ref);
-		if (wybor == "nie") //zabezpieczyæ przed z³ym wyborem 
+
+		if (wybor == "tak" || wybor == "t" || wybor == "y" || wybor == "yes")
 		{
-			if (!sudoSolution(Sudo_00, Sudo_Ref))
-			{
-				std::cout << " Brak rozwiazania :( " << std::endl;
-			}	
-		}
-		else
-		{
-			while (!endSudo(Sudo_00)) //jak zakonczyæ grê / wstrzymaæ??
+			while (!endSudo(Sudo_00))
 			{
 				printSudo(Sudo_00, Sudo_Ref);
 				inRowColVal(Sudo_00);
 			}
 		}
+		else
+		{
 			printSudo(Sudo_00, Sudo_Ref);
+			if (!sudoSolution(Sudo_00, Sudo_Ref))
+			{
+				std::cout << " Brak rozwiazania :( " << std::endl;
+			}
+
+		}
+		printSudo(Sudo_00, Sudo_Ref);
 	}
 
 

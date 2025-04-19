@@ -27,4 +27,9 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Matrix.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
